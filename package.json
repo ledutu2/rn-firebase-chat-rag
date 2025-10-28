@@ -1,7 +1,7 @@
 {
-  "name": "rn-firebase-chat",
+  "name": "rn-firebase-chat-rag",
   "version": "1.0.0",
-  "description": "Production-ready RAG system with MCP server, REST API, and web UI",
+  "description": "Production-ready RAG system with MCP server, REST API, and web UI for React Native documentation",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {

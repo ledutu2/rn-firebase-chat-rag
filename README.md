@@ -2,25 +2,53 @@
 
 A complete, production-ready **Retrieval-Augmented Generation (RAG)** system built with TypeScript, LangChain, LanceDB, and Ollama.
 
+This system provides AI-powered document retrieval and question answering through multiple interfaces: REST API, Web UI, and MCP Server integration with Cursor/Claude.
+
 ---
 
-## 🎉 NEW: Documentation Optimized! (2025-10-28)
+## 📊 Current Status
 
-**The documentation has been completely optimized for better RAG retrieval!**
+- ✅ **Active MCP Server**: `rn-firebase-chat` 
+- ✅ **Primary Documentation**: `rn-firebase-chat` - React Native Firebase Chat Library
+- ✅ **Documents Available**: Complete Firebase Chat documentation in `./docs/`
+- ✅ **Embedding Model**: Xenova/bge-base-en-v1.5
+- ✅ **LLM Model**: Llama3 via Ollama
+- ✅ **REST API**: Running on port 3000
+- ✅ **MCP Tools**: retrieve_context, search_by_metadata, get_stats
 
-- ✅ **43 chunks** of actual `rn-firebase-chat` library documentation
-- ✅ **Installation guides** (React Native + Expo)
-- ✅ **Firebase setup** (8-step complete guide with security rules)
-- ✅ **Usage examples** (ChatProvider, ChatScreen, Group Chat)
-- ✅ **Troubleshooting** and best practices
+**📚 Documentation Content:**
+- Installation guides (React Native CLI + Expo)
+- Firebase setup (Firestore, Storage, Authentication)
+- ChatProvider and chat components usage
+- Group chat and one-on-one conversations
+- Media sharing, encryption, and advanced features
+- Troubleshooting and best practices
 
-**📚 Read the optimization details:**
-- **Start here**: [`QUICK_START_AFTER_OPTIMIZATION.md`](./QUICK_START_AFTER_OPTIMIZATION.md)
-- **Full report**: [`DOCUMENTATION_OPTIMIZATION_REPORT.md`](./DOCUMENTATION_OPTIMIZATION_REPORT.md)
-- **Before/After**: [`BEFORE_AFTER_COMPARISON.md`](./BEFORE_AFTER_COMPARISON.md)
-- **Testing guide**: [`TESTING_GUIDE.md`](./TESTING_GUIDE.md)
+**🔄 To Add More Documentation:**
+1. Add your markdown files to `./docs/` directory
+2. Run: `npm start` (auto-reindexes) or `./reinit-database.sh`
+3. Restart Cursor (Cmd+Q, reopen) to refresh MCP connection
 
-**⚠️ Action Required**: Restart Cursor completely (Cmd+Q, reopen) to connect to the new database.
+---
+
+## 🚀 Quick Reference
+
+| What | Command | Documentation |
+|------|---------|---------------|
+| Start server | `npm start` or `npm run dev` | [Quick Start](#quick-start) |
+| Build project | `npm run build` | [Production](#production-deployment) |
+| Test MCP | `./test-mcp.sh` | [MCP Setup](#mcp-server-setup) |
+| Reset database | `./reinit-database.sh` | [Switching Docs](#switching-documentation) |
+| Check status | `curl localhost:3000/api/status` | [API Usage](#api-usage) |
+| View logs | `tail -f logs/combined.log` | [Monitoring](#monitoring) |
+| API docs | http://localhost:3000/api-docs | [Swagger UI](#5-access-the-interfaces) |
+| Chat UI | http://localhost:3000 | [Web Interface](#5-access-the-interfaces) |
+
+**💡 Quick Tips:**
+- Add docs to `./docs/*.md` → Server auto-reindexes on start
+- Change models in `.env` → `MODEL=llama3` or `mistral`
+- MCP not connecting? → Run `./reset-mcp.sh` and restart Cursor
+- Wrong docs? → Run `./reinit-database.sh`
 
 ---
 
@@ -118,6 +146,8 @@ Place your markdown files in the `./docs/` directory:
 echo "# Hello World\nThis is a test document." > docs/example.md
 ```
 
+**Current Content**: The system has `rn-firebase-chat` documentation indexed from `./docs/rn-firebase-chat-doc.md`. You can add additional documentation files as needed.
+
 ### 4. Start the Server
 
 ```bash
@@ -140,6 +170,18 @@ The server will:
 - **📚 API Documentation**: http://localhost:3000/api-docs
 - **📊 System Status**: http://localhost:3000/api/status
 
+### 6. Test the System
+
+```bash
+# Get system statistics
+curl http://localhost:3000/api/status
+
+# Example query about Firebase Chat
+curl -X POST http://localhost:3000/api/retrieve \
+  -H "Content-Type: application/json" \
+  -d '{"query": "How to install rn-firebase-chat?", "limit": 3}'
+```
+
 ## 📖 API Usage
 
 ### Retrieve Documents
@@ -147,7 +189,35 @@ The server will:
 ```bash
 curl -X POST http://localhost:3000/api/retrieve \
   -H "Content-Type: application/json" \
-  -d '{"query": "How to use Button?", "limit": 5}'
+  -d '{"query": "How to setup Firebase for chat?", "limit": 5}'
+```
+
+**Response example:**
+```json
+{
+  "query": "How to setup Firebase for chat?",
+  "results": [
+    {
+      "content": "## Firebase Setup\n\n### Step 1: Create Firebase Project\n1. Go to Firebase Console...",
+      "metadata": {
+        "source": "/path/to/docs/rn-firebase-chat-doc.md",
+        "title": "rn-firebase-chat",
+        "chunkIndex": 5
+      },
+      "relevanceScore": 0.91
+    },
+    {
+      "content": "### Firestore Security Rules\n\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /conversations/{conversationId} {...",
+      "metadata": {
+        "source": "/path/to/docs/rn-firebase-chat-doc.md",
+        "title": "Firebase Security Rules",
+        "chunkIndex": 8
+      },
+      "relevanceScore": 0.87
+    }
+  ],
+  "totalResults": 5
+}
 ```
 
 ### Generate Answer
@@ -155,7 +225,25 @@ curl -X POST http://localhost:3000/api/retrieve \
 ```bash
 curl -X POST http://localhost:3000/api/generate \
   -H "Content-Type: application/json" \
-  -d '{"query": "What is a Button component?", "topK": 5}'
+  -d '{"query": "How to implement group chat?", "topK": 5}'
+```
+
+**Response example:**
+```json
+{
+  "answer": "To implement group chat with rn-firebase-chat, you need to use the ChatProvider with customConversationInfo to specify multiple participants. Here's how:\n\n1. Import the ChatProvider component\n2. Set up customConversationInfo with participant IDs\n3. Navigate to the chat screen with the conversation details...",
+  "sources": [
+    {
+      "content": "## Group Chat\n\nFor group conversations, use customConversationInfo...",
+      "metadata": {
+        "source": "/path/to/docs/rn-firebase-chat-doc.md",
+        "title": "Group Chat Usage"
+      },
+      "relevanceScore": 0.92
+    }
+  ],
+  "query": "How to implement group chat?"
+}
 ```
 
 ### Stream Chat Response
@@ -163,7 +251,16 @@ curl -X POST http://localhost:3000/api/generate \
 ```bash
 curl -X POST http://localhost:3000/api/chat/stream \
   -H "Content-Type: application/json" \
-  -d '{"query": "Explain the Button props"}'
+  -d '{"query": "How to enable message encryption?"}'
+```
+
+Returns Server-Sent Events (SSE) stream with real-time response chunks:
+```
+data: {"chunk": "To enable message encryption in rn-firebase-chat"}
+data: {"chunk": ", you need to set the encryption props in"}
+data: {"chunk": " ChatProvider. Add enableEncryption={true}"}
+data: {"chunk": " and provide an encryption key..."}
+data: {"done": true}
 ```
 
 ### Check System Status
@@ -190,12 +287,18 @@ npm run build
 
 ### 2. Configure Cursor
 
-Add to your Cursor settings (or `~/.config/cursor/mcp.json`):
+**Automatic Configuration (Recommended):**
+
+The MCP server is already configured in Cursor if you see `rn-firebase-chat` in your MCP panel.
+
+**Manual Configuration:**
+
+If not configured, add to `~/.cursor/mcp.json` (macOS) or Cursor settings:
 
 ```json
 {
   "mcpServers": {
-    "rn-firebase-chat-rag": {
+    "rn-firebase-chat": {
       "command": "npm",
       "args": ["run", "mcp:prod"],
       "cwd": "/Users/tungle/saigontechnology/rn-firebase-chat-rag"
@@ -204,25 +307,141 @@ Add to your Cursor settings (or `~/.config/cursor/mcp.json`):
 }
 ```
 
-### 3. Start MCP Server
+⚠️ **Important**: Update the `cwd` path to match your actual project directory.
 
-```bash
-# Development
-npm run mcp
+### 3. Restart Cursor
 
-# Production (after build)
-npm run mcp:prod
+After configuration, restart Cursor completely (Cmd+Q on macOS, then reopen).
+
+### 4. Verify Connection
+
+In Cursor:
+1. Open the MCP panel
+2. Look for `rn-firebase-chat` server (should show "connected")
+3. Try asking: "How do I install rn-firebase-chat?"
+
+### 5. Available MCP Tools
+
+The MCP server provides these tools for AI-powered documentation access:
+
+#### `mcp_rn-firebase-chat_retrieve_context`
+Retrieve relevant documentation based on semantic search.
+
+**Parameters:**
+- `question` (string): Your question or query
+- `limit` (number, optional): Number of results (1-20, default: 5)
+
+**Example:**
+```
+In Cursor chat: "How do I setup Firebase for chat?"
+→ AI will use retrieve_context to find Firebase setup documentation
 ```
 
-### 4. Available Tools
+#### `mcp_rn-firebase-chat_search_by_metadata`
+Search by specific metadata filters (filename, section, etc.).
 
-The MCP server provides the following tools:
+**Parameters:**
+- `filters` (object): Key-value pairs to filter
+- `limit` (number, optional): Max results (1-100, default: 10)
 
-- **`retrieve_context`**: Retrieve relevant documentation
-- **`search_by_metadata`**: Search by metadata filters
-- **`get_stats`**: Get system statistics
+**Example:**
+```
+In Cursor chat: "Show me all Firebase security rules"
+→ AI will use search_by_metadata with {"title": "Firebase Security Rules"}
+```
 
-See `src/mcp/README.md` for detailed usage.
+#### `mcp_rn-firebase-chat_get_stats`
+Get system statistics and configuration.
+
+**Example:**
+```
+In Cursor chat: "How many documents are indexed?"
+→ AI will use get_stats to report current status
+```
+
+### 6. Usage in Cursor
+
+The MCP tools are automatically available to Claude in Cursor. Just ask questions naturally:
+
+- "How do I install rn-firebase-chat?"
+- "What are the Firebase security rules for chat?"
+- "How to implement group chat?"
+- "How to enable message encryption?"
+- "Show me ChatProvider usage examples"
+
+Claude will automatically use the MCP tools to retrieve relevant documentation and provide accurate answers.
+
+**📖 Detailed Guide**: See [`src/mcp/README.md`](./src/mcp/README.md) for complete MCP documentation.
+
+## 🔄 Managing Documentation
+
+The system is flexible and can index any markdown documentation. Currently, it has `rn-firebase-chat` documentation indexed.
+
+### Adding More Documentation
+
+1. **Add files to `./docs/`:**
+```bash
+# Add your markdown files (they will be indexed alongside rn-firebase-chat docs)
+cp /path/to/your/docs/*.md ./docs/
+```
+
+2. **Reindex the database:**
+```bash
+./reinit-database.sh
+# or
+npm start  # Auto-reindexes on startup if database doesn't exist
+```
+
+3. **Restart Cursor:**
+```bash
+# Quit Cursor completely (Cmd+Q on macOS)
+# Wait 5 seconds
+# Reopen Cursor
+```
+
+4. **Verify:**
+```bash
+# Check updated document count
+curl http://localhost:3000/api/status
+
+# Test retrieval with your new content
+curl -X POST http://localhost:3000/api/retrieve \
+  -H "Content-Type: application/json" \
+  -d '{"query": "your specific query", "limit": 3}'
+```
+
+### Replacing Documentation
+
+To replace the current documentation entirely:
+
+1. **Clear the docs directory:**
+```bash
+# Backup current docs if needed
+mv docs/rn-firebase-chat-doc.md docs/rn-firebase-chat-doc.md.backup
+
+# Add your new documentation
+cp /path/to/your/new-docs/*.md ./docs/
+```
+
+2. **Reinitialize database:**
+```bash
+rm -rf ./data/lancedb
+npm start
+```
+
+3. **Restart Cursor** to refresh the MCP connection
+
+### Documentation Format Tips
+
+For best RAG retrieval results:
+
+- ✅ Use clear, descriptive headings (H2, H3)
+- ✅ Keep sections focused and self-contained
+- ✅ Include code examples with context
+- ✅ Use consistent terminology
+- ✅ Add metadata comments if needed
+- ❌ Avoid extremely long sections (>2000 chars)
+- ❌ Don't split code examples across chunks
 
 ## 📁 Project Structure
 
@@ -323,7 +542,7 @@ curl http://localhost:3000/api/status
 Returns:
 ```json
 {
-  "documentCount": 42,
+  "documentCount": 43,
   "isInitialized": true,
   "availableComponents": [],
   "configuration": {
@@ -335,6 +554,8 @@ Returns:
   }
 }
 ```
+
+**Note**: `documentCount` shows the number of indexed chunks. The `availableComponents` array is populated when component documentation includes specific metadata tags.
 
 ## 🐛 Troubleshooting
 
@@ -353,8 +574,41 @@ Returns:
 **Error**: `No documents to index`
 
 **Solution**:
-1. Add markdown files to `./docs/` directory
-2. Restart the server or call reindex endpoint
+1. Check that markdown files exist in `./docs/` directory:
+   ```bash
+   ls -la ./docs/
+   ```
+2. Verify file permissions (files should be readable)
+3. Check that files have `.md` extension
+4. Restart the server or call reindex endpoint:
+   ```bash
+   curl -X POST http://localhost:3000/api/status/reindex
+   ```
+
+### Wrong Documentation Being Served
+
+**Issue**: MCP server returns different documentation than what's in `./docs/`
+
+**Solution**:
+This happens when the database was indexed with different documentation. To fix:
+
+1. Delete the current database:
+   ```bash
+   rm -rf ./data/lancedb
+   ```
+
+2. Restart the server (it will auto-reindex from `./docs/`):
+   ```bash
+   npm start
+   ```
+
+3. Verify the change:
+   ```bash
+   curl http://localhost:3000/api/status
+   # Check documentCount and availableComponents
+   ```
+
+4. Restart Cursor completely (Cmd+Q, reopen) to refresh MCP connection
 
 ### Embedding Model Download Issues
 
@@ -371,8 +625,56 @@ Returns:
 **Error**: `Port 3000 already in use`
 
 **Solution**:
-1. Change `PORT` in `.env`
-2. Or kill the process using the port
+1. Find and kill the process:
+   ```bash
+   # macOS/Linux
+   lsof -ti:3000 | xargs kill -9
+   
+   # Or change PORT in .env
+   PORT=3001
+   ```
+2. Restart the server
+
+### MCP Server Not Connected in Cursor
+
+**Issue**: MCP server not showing as "connected" in Cursor
+
+**Solutions**:
+
+1. **Verify configuration:**
+   ```bash
+   cat ~/.cursor/mcp.json
+   # Check that rn-firebase-chat server is configured
+   ```
+
+2. **Check build exists:**
+   ```bash
+   ls -la dist/mcp/server.js
+   # If missing, run: npm run build
+   ```
+
+3. **Test MCP manually:**
+   ```bash
+   npm run mcp
+   # Should show initialization logs
+   ```
+
+4. **Check logs:**
+   ```bash
+   tail -f logs/combined.log
+   # Look for errors during MCP startup
+   ```
+
+5. **Reset MCP:**
+   ```bash
+   ./reset-mcp.sh
+   # Then restart Cursor completely
+   ```
+
+6. **Verify Cursor restart:**
+   - Must completely quit (Cmd+Q, not just close window)
+   - Wait 5 seconds before reopening
+   - Check MCP panel for connection status
 
 ## 🚢 Production Deployment
 
@@ -432,6 +734,63 @@ CMD ["node", "dist/index.js"]
 - **Generation**: < 5 seconds (depends on LLM)
 - **Concurrent requests**: Supported
 - **Streaming**: Real-time response streaming
+- **Database**: LanceDB (fast vector search)
+- **Embeddings**: Cached after first generation
+
+## 🛠️ Utility Scripts
+
+The repository includes several helper scripts in the root directory:
+
+### `reinit-database.sh`
+Reinitializes the vector database from scratch.
+
+```bash
+./reinit-database.sh
+```
+
+**What it does:**
+1. Deletes existing LanceDB database
+2. Starts the server (auto-reindexes from `./docs/`)
+3. Shows the new document count
+
+**When to use:**
+- After adding/removing files in `./docs/`
+- When switching documentation sets
+- If retrieval results seem incorrect
+
+### `reset-mcp.sh`
+Resets the MCP server connection.
+
+```bash
+./reset-mcp.sh
+```
+
+**What it does:**
+1. Rebuilds the TypeScript project
+2. Shows instructions for restarting Cursor
+3. Provides test commands
+
+**When to use:**
+- MCP server not showing as connected
+- After code changes to MCP server
+- When troubleshooting MCP issues
+
+### `test-mcp.sh`
+Tests the MCP server manually.
+
+```bash
+./test-mcp.sh
+```
+
+**What it does:**
+1. Runs the MCP server in development mode
+2. Shows initialization logs
+3. Helps verify server is working
+
+**When to use:**
+- Debugging MCP server issues
+- Verifying configuration
+- Before reporting bugs
 
 ## 🤝 Contributing
 
@@ -443,26 +802,95 @@ Contributions are welcome! Please follow these guidelines:
 4. Add tests if applicable
 5. Submit a pull request
 
+## 📊 Project Stats
+
+- **Lines of Code**: ~2,500+ (TypeScript)
+- **Components**: 7 core RAG components
+- **API Endpoints**: 6 REST endpoints
+- **MCP Tools**: 3 tools for AI integration
+- **Current Database**: ~43 chunks of rn-firebase-chat documentation
+- **Documentation**: Installation, Firebase setup, usage examples, troubleshooting
+- **Supported Models**: Any Ollama model (llama3, mistral, codellama, etc.)
+- **License**: MIT
+
+## 🎯 Use Cases
+
+This RAG system is perfect for:
+
+1. **Documentation AI Assistant**: Index your project docs and ask questions
+2. **Code Knowledge Base**: Search through code documentation
+3. **Technical Support**: Automated answers from documentation
+4. **Cursor/Claude Integration**: AI-powered development with MCP
+5. **Learning Assistant**: Study from indexed educational materials
+6. **API Documentation Search**: Fast, semantic API reference lookup
+
+## 📚 Additional Resources
+
+- **Main Docs**: This README
+- **MCP Guide**: [`src/mcp/README.md`](./src/mcp/README.md) - Complete MCP documentation
+- **Testing**: [`TESTING_GUIDE.md`](./TESTING_GUIDE.md) - Test queries and expected results
+- **Optimization**: [`DOCUMENTATION_OPTIMIZATION_REPORT.md`](./DOCUMENTATION_OPTIMIZATION_REPORT.md)
+- **Quick Start**: [`QUICK_START_AFTER_OPTIMIZATION.md`](./QUICK_START_AFTER_OPTIMIZATION.md)
+- **Troubleshooting**: [`TROUBLESHOOTING.md`](./TROUBLESHOOTING.md)
+
 ## 📄 License
 
 MIT License - See LICENSE file for details
 
 ## 🙏 Acknowledgments
 
-- [LangChain.js](https://js.langchain.com/) - RAG framework
-- [LanceDB](https://lancedb.github.io/lancedb/) - Vector database
-- [Ollama](https://ollama.ai/) - Local LLM inference
-- [Xenova/Transformers.js](https://huggingface.co/docs/transformers.js) - Embeddings
-- [Model Context Protocol](https://modelcontextprotocol.io/) - AI tool integration
+Built with these amazing open-source projects:
+
+- [LangChain.js](https://js.langchain.com/) - RAG framework and document processing
+- [LanceDB](https://lancedb.github.io/lancedb/) - High-performance vector database
+- [Ollama](https://ollama.ai/) - Local LLM inference (supports 50+ models)
+- [Xenova/Transformers.js](https://huggingface.co/docs/transformers.js) - Client-side ML embeddings
+- [Model Context Protocol](https://modelcontextprotocol.io/) - AI tool integration standard
+- [Express.js](https://expressjs.com/) - Web server framework
+- [TypeScript](https://www.typescriptlang.org/) - Type-safe development
 
 ## 📞 Support
 
-For issues and questions:
-- Open an issue on GitHub
-- Check the documentation
-- Review the logs in `./logs/`
+### Getting Help
+
+1. **Check Documentation**: Review this README and `src/mcp/README.md`
+2. **Review Logs**: Check `./logs/combined.log` for errors
+3. **Test Components**: Use curl commands to test each component
+4. **Search Issues**: Look through existing GitHub issues
+5. **Open Issue**: Create a new issue with logs and error details
+
+### Common Issues
+
+| Issue | Solution | Documentation |
+|-------|----------|---------------|
+| Ollama not connecting | `ollama serve` | [Troubleshooting](#ollama-connection-error) |
+| MCP not connected | `./reset-mcp.sh` | [MCP Troubleshooting](#mcp-server-not-connected-in-cursor) |
+| Wrong docs served | `./reinit-database.sh` | [Switching Docs](#switching-documentation) |
+| Port in use | Change PORT in `.env` | [Port Issues](#port-already-in-use) |
+
+### Quick Diagnostics
+
+```bash
+# Check system status
+curl http://localhost:3000/api/status
+
+# Check Ollama
+ollama list
+curl http://localhost:11434/api/tags
+
+# Check logs
+tail -f logs/combined.log
+
+# Check database
+ls -la data/lancedb/
+
+# Check docs
+ls -la docs/
+```
 
 ---
 
 **Built with ❤️ using TypeScript, LangChain, and Ollama**
+
+**Ready to power your AI with intelligent document retrieval! 🚀**
 
