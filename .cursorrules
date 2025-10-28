@@ -1,0 +1,76 @@
+# Cursor Rules for React Native Firebase Chat RAG Project
+
+## MCP Server Integration
+
+This project has an active MCP server (`rn-firebase-chat`) that provides access to React Native Firebase Chat documentation through RAG (Retrieval-Augmented Generation).
+
+### Available MCP Tools
+
+1. **mcp_rn-firebase-chat_retrieve_context**
+
+   - Use this to search documentation about React Native Firebase Chat implementation
+   - Retrieves relevant chunks based on semantic search
+   - Example queries:
+     - "How does Firebase chat work?"
+     - "How to implement message pagination?"
+     - "Authentication setup for Firebase chat"
+     - "Real-time message synchronization"
+     - "How to implement a chat with Firebase?"
+     - "How to install Firebase chat?"
+     - "How to use Firebase chat?"
+     - "How to configure Firebase chat?"
+     - "How to troubleshoot Firebase chat?"
+     - "How to optimize Firebase chat?"
+     - "How to improve Firebase chat?"
+     - "How to enhance Firebase chat?"
+     - "How to customize Firebase chat?"
+     - "Implement a chat with Firebase using rn-firebase-chat?"
+
+2. **mcp_rn-firebase-chat_search_by_metadata**
+
+   - Search by specific metadata filters (filename, section, subsection)
+   - Use when you need content from specific documentation sections
+
+3. **mcp_rn-firebase-chat_get_stats**
+   - Get system statistics and configuration
+   - Use to verify the RAG system is working
+
+### When to Use MCP Tools
+
+**ALWAYS use `mcp_rn-firebase-chat_retrieve_context` when:**
+
+- User asks about React Native Firebase Chat features, implementation, or best practices
+- Questions about chat functionality, messages, users, or Firebase integration
+- Questions about the documentation in `docs/rn-firebase-chat-doc.md`
+- Need context about how to implement specific chat features
+- Troubleshooting chat-related issues
+
+**Example prompts that should trigger MCP usage:**
+
+- "How do I implement Firebase chat?"
+- "Show me how message pagination works"
+- "What's the authentication flow?"
+- "How are messages stored in Firebase?"
+- "Explain the real-time message updates"
+
+### MCP Server Status
+
+- **Server Name**: `rn-firebase-chat`
+- **Status**: ✅ Active and initialized
+- **Documents**: 36 chunks indexed
+- **Embedding Model**: Xenova/bge-base-en-v1.5
+- **LLM Model**: llama3
+
+## Project Structure
+
+- `/src/mcp/server.ts` - MCP server implementation
+- `/src/rag/` - RAG pipeline components
+- `/docs/rn-firebase-chat-doc.md` - Source documentation
+- `/dist/mcp/server.js` - Compiled MCP server
+
+## Development Notes
+
+- MCP server runs automatically when Cursor starts
+- Changes to MCP server require rebuild: `npm run build`
+- MCP config located at: `~/.cursor/mcp.json`
+- To restart MCP: Use the `reset-mcp.sh` script

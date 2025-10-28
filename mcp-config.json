@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "rn-firebase-chat": {
+      "command": "node",
+      "args": ["dist/mcp/server.js"],
+      "cwd": "/Users/tungle/saigontechnology/rn-firebase-chat-rag",
+      "env": {
+        "MCP_SERVER": "true"
+      }
+    }
+  }
+}
+
