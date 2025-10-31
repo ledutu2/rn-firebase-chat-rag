@@ -31,7 +31,8 @@ process.env.MCP_SERVER = 'true';
  *
  * This server exposes the RAG functionality as MCP tools and resources,
  * allowing AI assistants like Claude or Cursor to directly interact with
- * the chunking optimization documentation.
+ * the React Native Firebase Chat documentation, including chat implementation,
+ * message handling, authentication, and real-time synchronization patterns.
  */
 class RNFirebaseChatRAGServer {
   private server: Server;
@@ -71,14 +72,14 @@ class RNFirebaseChatRAGServer {
           {
             name: 'retrieve_context',
             description:
-              'Retrieve relevant documentation context based on a query. Returns document chunks with relevance scores. Use this to feed context into your prompts.',
+              'Retrieve relevant React Native Firebase Chat documentation context based on a query. Returns document chunks about chat implementation, message handling, authentication, real-time updates, and Firebase integration with relevance scores. Use this to feed context into your prompts.',
             inputSchema: {
               type: 'object',
               properties: {
                 question: {
                   type: 'string',
                   description:
-                    'The question or query to find relevant context for',
+                    'The question or query about React Native Firebase Chat to find relevant context for (e.g., "How to implement firebase chat?", "Firebase authentication setup", "Real-time message synchronization")',
                 },
                 limit: {
                   type: 'number',
@@ -94,13 +95,14 @@ class RNFirebaseChatRAGServer {
           {
             name: 'search_by_metadata',
             description:
-              'Search documentation by metadata filters (filename, section, subsection).',
+              'Search React Native Firebase Chat documentation by metadata filters (filename, section, subsection). Useful for finding specific documentation sections about chat features, Firebase setup, or implementation patterns.',
             inputSchema: {
               type: 'object',
               properties: {
                 filters: {
                   type: 'object',
-                  description: 'Metadata filters as key-value pairs',
+                  description:
+                    'Metadata filters as key-value pairs (e.g., {"section": "Authentication"}, {"filename": "rn-firebase-chat-doc.md"})',
                   additionalProperties: true,
                 },
                 limit: {
@@ -117,7 +119,7 @@ class RNFirebaseChatRAGServer {
           {
             name: 'get_stats',
             description:
-              'Get system statistics including document count and configuration.',
+              'Get React Native Firebase Chat RAG system statistics including indexed document count, embedding model configuration, and system status. Useful for verifying the system is ready and understanding available documentation coverage.',
             inputSchema: {
               type: 'object',
               properties: {},
@@ -341,7 +343,8 @@ class RNFirebaseChatRAGServer {
             uri: 'rag://documents',
             mimeType: 'text/markdown',
             name: 'Document Index',
-            description: 'Overview of indexed documents with statistics and preview of recent chunks',
+            description:
+              'Overview of indexed documents with statistics and preview of recent chunks',
           });
 
           return { resources };
@@ -383,7 +386,7 @@ class RNFirebaseChatRAGServer {
 - **Chunk Overlap**: ${stats.configuration.chunkOverlap}
 
 ## Usage
-Use the \`retrieve_context\` tool to search for specific information about chunking optimization and RAG systems.
+Use the \`retrieve_context\` tool to search for specific information about React Native Firebase Chat implementation, including message handling, authentication, real-time updates, and Firebase integration patterns.
 
 ${
   !stats.isInitialized
@@ -418,14 +421,17 @@ ${
             const allResults = await this.ragPipeline.retrieve('', 100);
 
             // Helper function to create a clean preview
-            const createPreview = (text: string, maxLength: number = 200): string => {
+            const createPreview = (
+              text: string,
+              maxLength: number = 200
+            ): string => {
               if (text.length <= maxLength) return text;
-              
+
               // Find the last space before maxLength to avoid cutting words
               const truncated = text.substring(0, maxLength);
               const lastSpace = truncated.lastIndexOf(' ');
-              
-              return lastSpace > 0 
+
+              return lastSpace > 0
                 ? truncated.substring(0, lastSpace) + '...'
                 : truncated + '...';
             };
@@ -476,7 +482,9 @@ ${allResults
 
 ---
 
-💡 **Tip**: Use the \`retrieve_context\` tool to search for specific content across all ${stats.documentCount} chunks.
+💡 **Tip**: Use the \`retrieve_context\` tool to search for specific content across all ${
+              stats.documentCount
+            } chunks.
 `;
 
             return {
@@ -540,9 +548,7 @@ ${allResults
         await this.ragPipeline.initialize();
         // this.logInfo('[MCP] RAG pipeline initialized successfully');
       } catch (error) {
-        this.logError(
-          `[MCP] Failed to initialize RAG pipeline: ${error}`
-        );
+        this.logError(`[MCP] Failed to initialize RAG pipeline: ${error}`);
         if (error instanceof Error) {
           this.logError(`[MCP] Stack trace: ${error.stack}`);
         }
