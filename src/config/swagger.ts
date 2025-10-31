@@ -1,17 +1,22 @@
 import swaggerJsdoc from 'swagger-jsdoc';
+import { config } from './modelConfig.js';
 
 const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'RAG System API',
+      title: 'RAG System API - Retrieval Only (VPS Mode)',
       version: '1.0.0',
-      description: 'REST API for Retrieval-Augmented Generation system with LangChain, LanceDB, and Ollama',
+      description: 'REST API for Retrieval-Augmented Generation system - Retrieval functionality only for VPS deployment',
       contact: {
         name: 'API Support',
       },
     },
     servers: [
+      {
+        url: `${config.protocol}://${config.host}:${config.port}`,
+        description: 'VPS server',
+      },
       {
         url: 'http://localhost:4000',
         description: 'Development server',
