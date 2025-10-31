@@ -7,6 +7,8 @@ export interface ModelConfig {
   // Server Configuration
   port: number;
   nodeEnv: string;
+  host: string;
+  protocol: string;
 
   // Model Configuration
   model: string;
@@ -39,8 +41,10 @@ function getEnvNumber(key: string, defaultValue: number): number {
 
 export function loadConfig(): ModelConfig {
   const config: ModelConfig = {
-    port: getEnvNumber('PORT', 3000),
+    port: getEnvNumber('PORT', 4000),
     nodeEnv: getEnvVariable('NODE_ENV', 'development'),
+    host: getEnvVariable('HOST', 'localhost'),
+    protocol: getEnvVariable('PROTOCOL', 'http'),
     model: getEnvVariable('MODEL', 'llama3'),
     ollamaBaseUrl: getEnvVariable('OLLAMA_BASE_URL', 'http://localhost:11434'),
     embeddingModel: getEnvVariable('EMBEDDING_MODEL', 'Xenova/bge-base-en-v1.5'),

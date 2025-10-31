@@ -7,8 +7,9 @@ import { config } from './config/modelConfig.js';
 import { swaggerSpec } from './config/swagger.js';
 import { RAGPipeline } from './rag/pipeline.js';
 import { createRetrieveHandler } from './api/retrieve.js';
-import { createGenerateHandler } from './api/generate.js';
-import { createChatStreamHandler } from './api/chat.js';
+// COMMENTED OUT: Generation functionality disabled for VPS deployment
+// import { createGenerateHandler } from './api/generate.js';
+// import { createChatStreamHandler } from './api/chat.js';
 import { createStatusHandler, createReindexHandler } from './api/status.js';
 
 // Initialize Express app
@@ -41,14 +42,15 @@ const pipeline = new RAGPipeline();
 // Root endpoint
 app.get('/', (req: Request, res: Response) => {
   res.json({
-    message: 'RAG System API',
+    message: 'RAG System API - Retrieval Only (VPS Mode)',
     version: '1.0.0',
     endpoints: {
       documentation: '/api-docs',
       status: '/api/status',
       retrieve: 'POST /api/retrieve',
-      generate: 'POST /api/generate',
-      chat: 'POST /api/chat/stream',
+      // COMMENTED OUT: Generation functionality disabled for VPS deployment
+      // generate: 'POST /api/generate',
+      // chat: 'POST /api/chat/stream',
       reindex: 'POST /api/status/reindex',
     },
   });
@@ -119,55 +121,57 @@ app.post('/api/status/reindex', createReindexHandler(pipeline));
  */
 app.post('/api/retrieve', createRetrieveHandler(pipeline));
 
-/**
- * @openapi
- * /api/generate:
- *   post:
- *     summary: Generate answer with context
- *     tags: [RAG]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/GenerateRequest'
- *     responses:
- *       200:
- *         description: Generated answer
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/GenerateResponse'
- *       400:
- *         description: Bad request
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
-app.post('/api/generate', createGenerateHandler(pipeline));
+// COMMENTED OUT: Generation functionality disabled for VPS deployment
+// /**
+//  * @openapi
+//  * /api/generate:
+//  *   post:
+//  *     summary: Generate answer with context
+//  *     tags: [RAG]
+//  *     requestBody:
+//  *       required: true
+//  *       content:
+//  *         application/json:
+//  *           schema:
+//  *             $ref: '#/components/schemas/GenerateRequest'
+//  *     responses:
+//  *       200:
+//  *         description: Generated answer
+//  *         content:
+//  *           application/json:
+//  *             schema:
+//  *               $ref: '#/components/schemas/GenerateResponse'
+//  *       400:
+//  *         description: Bad request
+//  *         content:
+//  *           application/json:
+//  *             schema:
+//  *               $ref: '#/components/schemas/ErrorResponse'
+//  */
+// app.post('/api/generate', createGenerateHandler(pipeline));
 
-/**
- * @openapi
- * /api/chat/stream:
- *   post:
- *     summary: Stream chat response
- *     tags: [RAG]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/GenerateRequest'
- *     responses:
- *       200:
- *         description: Server-Sent Events stream
- *         content:
- *           text/event-stream:
- *             schema:
- *               type: string
- */
-app.post('/api/chat/stream', createChatStreamHandler(pipeline));
+// COMMENTED OUT: Generation functionality disabled for VPS deployment
+// /**
+//  * @openapi
+//  * /api/chat/stream:
+//  *   post:
+//  *     summary: Stream chat response
+//  *     tags: [RAG]
+//  *     requestBody:
+//  *       required: true
+//  *       content:
+//  *         application/json:
+//  *           schema:
+//  *             $ref: '#/components/schemas/GenerateRequest'
+//  *     responses:
+//  *       200:
+//  *         description: Server-Sent Events stream
+//  *         content:
+//  *           text/event-stream:
+//  *             schema:
+//  *               type: string
+//  */
+// app.post('/api/chat/stream', createChatStreamHandler(pipeline));
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

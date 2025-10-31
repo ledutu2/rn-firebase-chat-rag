@@ -2,7 +2,8 @@ import { DocumentLoader } from './loader.js';
 import { Embedder } from './embedder.js';
 import { VectorStore, VectorDocument } from './vectorStore.js';
 import { Retriever, RetrievalResult } from './retriever.js';
-import { Generator, GenerateResponse } from './generator.js';
+// COMMENTED OUT: Generation functionality disabled for VPS deployment
+// import { Generator, GenerateResponse } from './generator.js';
 import { logger } from '../config/logger.js';
 import { config } from '../config/modelConfig.js';
 import crypto from 'crypto';
@@ -20,7 +21,8 @@ export class RAGPipeline {
   private embedder: Embedder;
   private vectorStore: VectorStore;
   private retriever: Retriever;
-  private generator: Generator;
+  // COMMENTED OUT: Generation functionality disabled for VPS deployment
+  // private generator: Generator;
   private initialized: boolean = false;
 
   constructor(customConfig?: RAGPipelineConfig) {
@@ -28,7 +30,8 @@ export class RAGPipeline {
     this.embedder = new Embedder(customConfig?.embeddingModel);
     this.vectorStore = new VectorStore(customConfig?.lancedbPath);
     this.retriever = new Retriever(this.vectorStore, this.embedder);
-    this.generator = new Generator(customConfig?.llmModel, customConfig?.ollamaBaseUrl);
+    // COMMENTED OUT: Generation functionality disabled for VPS deployment
+    // this.generator = new Generator(customConfig?.llmModel, customConfig?.ollamaBaseUrl);
   }
 
   async initialize(forceReindex: boolean = false): Promise<void> {
@@ -43,6 +46,7 @@ export class RAGPipeline {
       // Initialize components in order
       await this.embedder.initialize();
       await this.vectorStore.initialize();
+      // COMMENTED OUT: Generation functionality disabled for VPS deployment
       // await this.generator.initialize();
 
       // Check if documents already exist
@@ -137,46 +141,48 @@ export class RAGPipeline {
     }
   }
 
-  async generate(query: string, topK?: number): Promise<GenerateResponse> {
-    if (!this.isReady()) {
-      throw new Error('RAG Pipeline not initialized. Call initialize() first.');
-    }
+  // COMMENTED OUT: Generation functionality disabled for VPS deployment
+  // async generate(query: string, topK?: number): Promise<GenerateResponse> {
+  //   if (!this.isReady()) {
+  //     throw new Error('RAG Pipeline not initialized. Call initialize() first.');
+  //   }
 
-    try {
-      const startTime = Date.now();
+  //   try {
+  //     const startTime = Date.now();
       
-      // Retrieve relevant context
-      const context = await this.retrieve(query, topK);
+  //     // Retrieve relevant context
+  //     const context = await this.retrieve(query, topK);
       
-      // Generate answer
-      const response = await this.generator.generate(query, context);
+  //     // Generate answer
+  //     const response = await this.generator.generate(query, context);
       
-      const processingTime = Date.now() - startTime;
-      logger.info(`Query processed in ${processingTime}ms`);
+  //     const processingTime = Date.now() - startTime;
+  //     logger.info(`Query processed in ${processingTime}ms`);
       
-      return response;
-    } catch (error) {
-      logger.error('Failed to generate answer', { error });
-      throw new Error(`Failed to generate answer: ${error}`);
-    }
-  }
+  //     return response;
+  //   } catch (error) {
+  //     logger.error('Failed to generate answer', { error });
+  //     throw new Error(`Failed to generate answer: ${error}`);
+  //   }
+  // }
 
-  async *generateStream(query: string, topK?: number): AsyncGenerator<string, void, unknown> {
-    if (!this.isReady()) {
-      throw new Error('RAG Pipeline not initialized. Call initialize() first.');
-    }
+  // COMMENTED OUT: Generation functionality disabled for VPS deployment
+  // async *generateStream(query: string, topK?: number): AsyncGenerator<string, void, unknown> {
+  //   if (!this.isReady()) {
+  //     throw new Error('RAG Pipeline not initialized. Call initialize() first.');
+  //   }
 
-    try {
-      // Retrieve relevant context
-      const context = await this.retrieve(query, topK);
+  //   try {
+  //     // Retrieve relevant context
+  //     const context = await this.retrieve(query, topK);
       
-      // Generate streaming answer
-      yield* this.generator.generateStream(query, context);
-    } catch (error) {
-      logger.error('Failed to generate streaming answer', { error });
-      throw new Error(`Failed to generate streaming answer: ${error}`);
-    }
-  }
+  //     // Generate streaming answer
+  //     yield* this.generator.generateStream(query, context);
+  //   } catch (error) {
+  //     logger.error('Failed to generate streaming answer', { error });
+  //     throw new Error(`Failed to generate streaming answer: ${error}`);
+  //   }
+  // }
 
   async getStats(): Promise<{
     documentCount: number;
@@ -190,7 +196,8 @@ export class RAGPipeline {
       isInitialized: this.initialized,
       configuration: {
         embeddingModel: this.embedder.getModelName(),
-        model: this.generator.getModelName(),
+        // COMMENTED OUT: Generation functionality disabled for VPS deployment
+        // model: this.generator.getModelName(),
         topKResults: config.topKResults,
         chunkSize: config.chunkSize,
         chunkOverlap: config.chunkOverlap,
@@ -203,8 +210,9 @@ export class RAGPipeline {
       this.initialized &&
       this.embedder.isReady() &&
       this.vectorStore.isReady() &&
-      this.retriever.isReady() &&
-      this.generator.isReady()
+      this.retriever.isReady()
+      // COMMENTED OUT: Generation functionality disabled for VPS deployment
+      // && this.generator.isReady()
     );
   }
 
