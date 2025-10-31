@@ -16,10 +16,57 @@ import { createStatusHandler, createReindexHandler } from './api/status.js';
 const app = express();
 
 // Middleware
-app.use(helmet());
-app.use(cors());
+app.use(
+  helmet({
+    // Disable problematic security headers for HTTP deployment
+    crossOriginOpenerPolicy: false,
+    crossOriginResourcePolicy: false,
+    originAgentCluster: false,
+    contentSecurityPolicy: false, // Disable CSP to avoid mixed content issues
+  })
+);
+
+// Configure CORS for specific host
+app.use(
+  cors({
+    origin: [
+      'http://10.30.10.35:4000',
+      'http://10.30.10.35',
+      'http://localhost:4000',
+      'http://localhost',
+      `${config.protocol}://${config.host}:${config.port}`,
+      `${config.protocol}://${config.host}`,
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Custom middleware to handle HTTP deployment issues
+app.use((req: Request, res: Response, next: NextFunction) => {
+  // Remove problematic headers that cause issues with HTTP
+  res.removeHeader('Cross-Origin-Opener-Policy');
+  res.removeHeader('Cross-Origin-Embedder-Policy');
+  res.removeHeader('Origin-Agent-Cluster');
+
+  // Set proper CORS headers
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PUT, DELETE, OPTIONS'
+  );
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, Accept'
+  );
+
+  next();
+});
 
 // Request logging middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -34,7 +81,40 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use(express.static('public'));
 
 // API Documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    swaggerOptions: {
+      // Ensure Swagger UI works with HTTP
+      url: `${config.protocol}://${config.host}:${config.port}/api-docs/swagger.json`,
+      supportedSubmitMethods: ['get', 'post', 'put', 'delete'],
+    },
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'RAG System API - Retrieval Only',
+  })
+);
+
+// Serve the swagger spec as JSON
+app.get('/api-docs/swagger.json', (req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
+// Handle preflight requests
+app.options('*', (req: Request, res: Response) => {
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PUT, DELETE, OPTIONS'
+  );
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, Accept'
+  );
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.status(200).end();
+});
 
 // Initialize RAG Pipeline
 const pipeline = new RAGPipeline();
@@ -178,7 +258,10 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.error('Unhandled error', { error: err });
   res.status(500).json({
     error: 'Internal Server Error',
-    message: config.nodeEnv === 'development' ? err.message : 'An unexpected error occurred',
+    message:
+      config.nodeEnv === 'development'
+        ? err.message
+        : 'An unexpected error occurred',
   });
 });
 
@@ -193,7 +276,7 @@ app.use((req: Request, res: Response) => {
 // Graceful shutdown
 const gracefulShutdown = async (signal: string) => {
   logger.info(`${signal} received, shutting down gracefully...`);
-  
+
   try {
     await pipeline.close();
     logger.info('RAG Pipeline closed');
@@ -211,15 +294,21 @@ process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 async function startServer() {
   try {
     logger.info('Starting RAG System...');
-    
+
     // Initialize RAG Pipeline
     await pipeline.initialize();
-    
+
     // Start Express server
     app.listen(config.port, () => {
-      logger.info(`🚀 Server running on ${config.protocol}://${config.host}:${config.port}`);
-      logger.info(`📚 API Documentation: ${config.protocol}://${config.host}:${config.port}/api-docs`);
-      logger.info(`💬 Chat Interface: ${config.protocol}://${config.host}:${config.port}`);
+      logger.info(
+        `🚀 Server running on ${config.protocol}://${config.host}:${config.port}`
+      );
+      logger.info(
+        `📚 API Documentation: ${config.protocol}://${config.host}:${config.port}/api-docs`
+      );
+      logger.info(
+        `💬 Chat Interface: ${config.protocol}://${config.host}:${config.port}`
+      );
     });
   } catch (error) {
     logger.error('Failed to start server', { error });
@@ -228,4 +317,3 @@ async function startServer() {
 }
 
 startServer();
-
