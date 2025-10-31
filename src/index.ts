@@ -217,9 +217,9 @@ async function startServer() {
     
     // Start Express server
     app.listen(config.port, () => {
-      logger.info(`🚀 Server running on http://localhost:${config.port}`);
-      logger.info(`📚 API Documentation: http://localhost:${config.port}/api-docs`);
-      logger.info(`💬 Chat Interface: http://localhost:${config.port}`);
+      logger.info(`🚀 Server running on ${config.protocol}://${config.host}:${config.port}`);
+      logger.info(`📚 API Documentation: ${config.protocol}://${config.host}:${config.port}/api-docs`);
+      logger.info(`💬 Chat Interface: ${config.protocol}://${config.host}:${config.port}`);
     });
   } catch (error) {
     logger.error('Failed to start server', { error });
