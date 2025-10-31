@@ -107,19 +107,19 @@ Retrieve relevant documentation based on a query.
 
 **Example usage in Cursor:**
 ```
-Can you retrieve context about "Button component" using the RAG tool?
+Can you retrieve context about "Firebase chat authentication" using the RAG tool?
 ```
 
 **Example response:**
 ```json
 {
-  "query": "Button component",
+  "query": "Firebase chat authentication",
   "results": [
     {
-      "content": "Button component provides customizable...",
+      "content": "Firebase authentication for chat requires setting up user management...",
       "metadata": {
-        "source": "Button.md",
-        "title": "Button"
+        "source": "firebase-auth.md",
+        "title": "Firebase Authentication"
       },
       "relevanceScore": 0.89
     }
@@ -138,17 +138,17 @@ Search documentation using metadata filters.
 
 **Example usage:**
 ```
-Search for documents with source "Button.md" using the RAG metadata tool
+Search for documents with source "firebase-chat.md" using the RAG metadata tool
 ```
 
 **Example response:**
 ```json
 {
   "filters": {
-    "source": "Button.md"
+    "source": "firebase-chat.md"
   },
   "results": [...],
-  "totalResults": 3
+  "totalResults": 8
 }
 ```
 

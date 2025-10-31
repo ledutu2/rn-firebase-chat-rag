@@ -7,7 +7,8 @@ const options: swaggerJsdoc.Options = {
     info: {
       title: 'RAG System API - Retrieval Only (VPS Mode)',
       version: '1.0.0',
-      description: 'REST API for Retrieval-Augmented Generation system - Retrieval functionality only for VPS deployment',
+      description:
+        'REST API for Retrieval-Augmented Generation system - Retrieval functionality only for VPS deployment',
       contact: {
         name: 'API Support',
       },
@@ -25,7 +26,8 @@ const options: swaggerJsdoc.Options = {
     tags: [
       {
         name: 'RAG',
-        description: 'RAG operations (retrieve, generate)',
+        description:
+          'RAG operations for React Native Firebase Chat (retrieval only)',
       },
       {
         name: 'System',
@@ -40,8 +42,8 @@ const options: swaggerJsdoc.Options = {
           properties: {
             query: {
               type: 'string',
-              description: 'Search query',
-              example: 'How to use Button component?',
+              description: 'Search query related to React Native Firebase Chat',
+              example: 'How to implement real-time messaging with Firebase?',
             },
             limit: {
               type: 'integer',
@@ -85,8 +87,10 @@ const options: swaggerJsdoc.Options = {
           properties: {
             query: {
               type: 'string',
-              description: 'Question to answer',
-              example: 'What are the props of Button component?',
+              description:
+                'Question about React Native Firebase Chat implementation',
+              example:
+                'How do I set up Firebase authentication for chat users?',
             },
             topK: {
               type: 'integer',
@@ -162,4 +166,3 @@ const options: swaggerJsdoc.Options = {
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
-
