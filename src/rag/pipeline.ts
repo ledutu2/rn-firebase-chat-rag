@@ -43,7 +43,7 @@ export class RAGPipeline {
       // Initialize components in order
       await this.embedder.initialize();
       await this.vectorStore.initialize();
-      await this.generator.initialize();
+      // await this.generator.initialize();
 
       // Check if documents already exist
       const existingCount = await this.vectorStore.getDocumentCount();
