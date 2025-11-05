@@ -37,6 +37,8 @@ This system provides AI-powered document retrieval and question answering throug
 |------|---------|---------------|
 | Start server | `npm start` or `npm run dev` | [Quick Start](#quick-start) |
 | Build project | `npm run build` | [Production](#production-deployment) |
+| Deploy to Vercel | `vercel --prod` | [Vercel Deployment](#deploy-to-vercel-recommended-) |
+| Test Vercel locally | `./test-vercel-local.sh` | [Vercel Quick Start](./VERCEL_QUICK_START.md) |
 | Test MCP | `./test-mcp.sh` | [MCP Setup](#mcp-server-setup) |
 | Reset database | `./reinit-database.sh` | [Switching Docs](#switching-documentation) |
 | Check status | `curl localhost:3000/api/status` | [API Usage](#api-usage) |
@@ -678,6 +680,31 @@ This happens when the database was indexed with different documentation. To fix:
 
 ## 🚢 Production Deployment
 
+### Deploy to Vercel (Recommended) ⚡
+
+Deploy your MCP server to Vercel's serverless infrastructure in minutes:
+
+```bash
+# Quick deployment
+vercel
+
+# Production deployment
+vercel --prod
+```
+
+**Features:**
+- ✅ Serverless MCP server with HTTP transport
+- ✅ Auto-scaling and optimized for AI workloads
+- ✅ Global edge network
+- ✅ Zero configuration needed
+- 🌐 **Public access** - no authentication required
+
+**📖 Complete Guide**: See [`VERCEL_PUBLIC_DEPLOYMENT.md`](./VERCEL_PUBLIC_DEPLOYMENT.md) for public deployment
+
+**🚀 Quick Start**: See [`VERCEL_QUICK_START.md`](./VERCEL_QUICK_START.md) for 5-minute setup
+
+**Test Locally**: Run `./test-vercel-local.sh` to test Vercel deployment locally
+
 ### Build for Production
 
 ```bash
@@ -690,7 +717,7 @@ npm run build
 NODE_ENV=production node dist/index.js
 ```
 
-### PM2 (Recommended)
+### PM2 (Traditional Server)
 
 ```bash
 npm install -g pm2

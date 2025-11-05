@@ -1,0 +1,84 @@
+# Dependencies
+node_modules/
+
+# Development files
+*.md
+!VERCEL_DEPLOYMENT.md
+!README.md
+
+# Logs
+logs/
+*.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Test files
+test-*.sh
+reinit-database.sh
+reset-mcp.sh
+
+# Build artifacts (will be rebuilt)
+dist/
+
+# Documentation (except deployment guide)
+BEFORE_AFTER_COMPARISON.md
+BUILD_STATUS.md
+CURSOR_READY.md
+DOCUMENTATION_OPTIMIZATION_REPORT.md
+DOCUMENTATION_UPDATE.md
+FINAL_STATUS.md
+firebase-docs-original.expo.md
+firebase-docs-original.md
+implement-firebase-chat-prompt.md
+LOG_COMPARISON.md
+MCP_CURSOR_FIX.md
+MCP_FIX_COMPLETE.md
+MCP_FIX_STATUS.md
+MCP_INITIALIZATION_FIX.md
+MCP_LOGGING_FIX.md
+MCP_TROUBLESHOOTING.md
+MCP-SETUP.md
+OPTIMIZATION_COMPLETE.md
+OPTIMIZATION_SUMMARY.md
+PROJECT_SUMMARY.md
+PROMPT_OPTIMIZATION_COMPARISON.md
+PROMPT_V3_INDEX.md
+PROMPT_V3_NAVIGATION.md
+PROMPT_V3_QUICK_START.md
+PROMPT_V3_README.md
+PROMPT_V3_SUMMARY.md
+QUICK_REFERENCE.md
+QUICK_START_AFTER_OPTIMIZATION.md
+rag-init-prompt-v2-optimized.md
+rag-init-prompt-v3-battle-tested.md
+README_FIREBASE_CHAT_UPDATE.md
+README_UPDATE_SUMMARY.md
+SETUP.md
+TESTING_GUIDE.md
+TROUBLESHOOTING.md
+UPDATE_CHATSTATE_DISPATCH.md
+
+# Public web UI (not needed for MCP server)
+public/
+
+# MCP config (local only)
+mcp-config.json
+
