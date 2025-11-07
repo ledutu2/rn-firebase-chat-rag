@@ -67,7 +67,7 @@ PORT=4000
 NODE_ENV=production
 
 # MCP HTTP Server Configuration
-MCP_HTTP_PORT=3001
+MCP_HTTP_PORT=4001
 MCP_HTTP_HOST=0.0.0.0
 
 # Model Configuration
@@ -154,7 +154,7 @@ fi
 echo -e "${YELLOW}🧪 Testing the service...${NC}"
 sleep 2
 
-HEALTH_CHECK=$(curl -s http://localhost:3001/health || echo "failed")
+HEALTH_CHECK=$(curl -s http://localhost:4001/health || echo "failed")
 
 if [[ $HEALTH_CHECK == *"ok"* ]]; then
     echo -e "${GREEN}✓ Health check passed${NC}"
@@ -171,7 +171,7 @@ echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━
 echo ""
 echo -e "${YELLOW}📊 Service Information:${NC}"
 echo -e "   Service Status: ${GREEN}$(sudo systemctl is-active ${SERVICE_NAME})${NC}"
-echo -e "   Local URL: http://localhost:3001"
+echo -e "   Local URL: http://localhost:4001"
 echo -e "   Public URL: http://${DOMAIN}"
 echo ""
 echo -e "${YELLOW}📝 Useful Commands:${NC}"

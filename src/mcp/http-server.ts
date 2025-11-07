@@ -17,7 +17,7 @@ const projectRoot = path.resolve(__dirname, '../..');
 // Load environment variables
 dotenv.config({ path: path.join(projectRoot, '.env') });
 
-const PORT = parseInt(process.env.MCP_HTTP_PORT || '3001', 10);
+const PORT = parseInt(process.env.MCP_HTTP_PORT || '4001', 10);
 const HOST = process.env.MCP_HTTP_HOST || '0.0.0.0';
 
 /**

@@ -169,8 +169,8 @@ sudo systemctl restart rn-firebase-chat-mcp
 
 ## 🔢 Ports
 
-- **3001**: Internal MCP HTTP server (configured in .env via MCP_HTTP_PORT)
 - **4000**: Main API server (configured in .env via PORT)
+- **4001**: MCP HTTP server (configured in .env via MCP_HTTP_PORT)
 - **80**: External HTTP (Nginx)
 - **443**: External HTTPS (Nginx, after SSL)
 - **22**: SSH
@@ -180,7 +180,7 @@ sudo systemctl restart rn-firebase-chat-mcp
 Configuration is managed via `.env` file at `/home/locnguyent/rn-firebase-chat-rag/.env`
 
 Key settings:
-- `MCP_HTTP_PORT=3001` - MCP server port
+- `MCP_HTTP_PORT=4001` - MCP server port
 - `MCP_HTTP_HOST=0.0.0.0` - MCP server host
 - `PORT=4000` - Main API server port
 - `HOST=10.30.10.35` - Server host

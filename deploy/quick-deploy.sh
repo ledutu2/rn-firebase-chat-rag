@@ -67,7 +67,7 @@ sleep 3
 
 # Test health endpoint
 echo -e "${YELLOW}Testing health endpoint...${NC}"
-HEALTH_RESPONSE=$(curl -s http://localhost:3001/health || echo "failed")
+HEALTH_RESPONSE=$(curl -s http://localhost:4001/health || echo "failed")
 
 if [[ $HEALTH_RESPONSE == *"ok"* ]]; then
     echo -e "${GREEN}✓ Health check passed${NC}"
@@ -79,7 +79,7 @@ fi
 
 echo ""
 echo -e "${YELLOW}Testing MCP server info...${NC}"
-INFO_RESPONSE=$(curl -s http://localhost:3001/ || echo "failed")
+INFO_RESPONSE=$(curl -s http://localhost:4001/ || echo "failed")
 
 if [[ $INFO_RESPONSE == *"rn-firebase-chat"* ]]; then
     echo -e "${GREEN}✓ MCP server info retrieved${NC}"
@@ -94,7 +94,7 @@ echo -e "${BLUE}📊 Deployment Summary${NC}"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 echo -e "${YELLOW}🌐 URLs:${NC}"
-echo -e "   Local:  http://localhost:3001"
+echo -e "   Local:  http://localhost:4001"
 echo -e "   Public: http://rn-firebase-chat-mcp.rnbase.online"
 echo ""
 echo -e "${YELLOW}🔧 Service:${NC}"

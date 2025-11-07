@@ -116,8 +116,9 @@ Expected response:
 
 The deployment script automatically creates a `.env` file with default configuration. The MCP HTTP server uses:
 
-- **MCP_HTTP_PORT**: 3001 (internal port)
+- **MCP_HTTP_PORT**: 4001 (internal port for MCP server)
 - **MCP_HTTP_HOST**: 0.0.0.0 (listen on all interfaces)
+- **PORT**: 4000 (main API server port)
 
 To customize the configuration:
 

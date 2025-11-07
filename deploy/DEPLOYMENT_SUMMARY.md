@@ -43,7 +43,7 @@ A new HTTP server that exposes MCP functionality as REST API endpoints:
 
 #### `deploy/nginx.conf`
 - Nginx reverse proxy configuration
-- Proxies `rn-firebase-chat-mcp.rnbase.online` to `localhost:3001`
+- Proxies `rn-firebase-chat-mcp.rnbase.online` to `localhost:4001`
 - Includes commented HTTPS configuration
 - Security headers
 - Logging configuration
@@ -283,7 +283,7 @@ curl http://rn-firebase-chat-mcp.rnbase.online/health
 | VPS IP | 10.30.10.35 |
 | Username | locnguyent |
 | Domain | rn-firebase-chat-mcp.rnbase.online |
-| Internal Port | 3001 |
+| Internal Port | 4001 (MCP), 4000 (API) |
 | External Ports | 80 (HTTP), 443 (HTTPS) |
 | Project Path | /home/locnguyent/rn-firebase-chat-rag |
 | Service Name | rn-firebase-chat-mcp |

@@ -7,7 +7,7 @@ All deployment files and configurations have been created successfully!
 ### 1. HTTP Server for MCP
 - **File**: `src/mcp/http-server.ts`
 - **Purpose**: Exposes MCP functionality as REST API
-- **Port**: 3001 (internal)
+- **Port**: 4001 (internal)
 - **Features**: Health checks, all MCP tools and resources as HTTP endpoints
 
 ### 2. Deployment Scripts
@@ -154,7 +154,7 @@ curl http://rn-firebase-chat-mcp.rnbase.online/resources/documents
                    │
                    ▼
 ┌─────────────────────────────────────────────┐
-│  MCP HTTP Server (Port 3001)                │
+│  MCP HTTP Server (Port 4001)                │
 │  - Express.js                               │
 │  - CORS enabled                             │
 │  - REST API endpoints                       │
@@ -182,7 +182,7 @@ curl http://rn-firebase-chat-mcp.rnbase.online/resources/documents
 All configuration is managed via the `.env` file at `/home/locnguyent/rn-firebase-chat-rag/.env`
 
 Key settings:
-- `MCP_HTTP_PORT=3001` - MCP server port (internal)
+- `MCP_HTTP_PORT=4001` - MCP server port
 - `MCP_HTTP_HOST=0.0.0.0` - MCP server host
 - `PORT=4000` - Main API server port
 - `HOST=10.30.10.35` - Server host
@@ -276,7 +276,8 @@ curl https://rn-firebase-chat-mcp.rnbase.online/health
 - **Service**: `/etc/systemd/system/rn-firebase-chat-mcp.service`
 
 ### Ports
-- **3001**: Internal MCP HTTP server
+- **4000**: Main API server
+- **4001**: MCP HTTP server
 - **80**: External HTTP
 - **443**: External HTTPS (after SSL)
 
@@ -318,7 +319,7 @@ sudo systemctl restart rn-firebase-chat-mcp
 ### Service won't start
 ```bash
 sudo journalctl -u rn-firebase-chat-mcp -n 100
-sudo lsof -i :3001
+sudo lsof -i :4001
 ```
 
 ### Can't access domain

@@ -98,7 +98,7 @@ PORT=4000
 NODE_ENV=production
 
 # MCP HTTP Server Configuration
-MCP_HTTP_PORT=3001
+MCP_HTTP_PORT=4001
 MCP_HTTP_HOST=0.0.0.0
 
 # Model Configuration
@@ -133,7 +133,7 @@ Key configurations:
 - **User**: locnguyent
 - **WorkingDirectory**: /home/locnguyent/rn-firebase-chat-rag
 - **Environment File**: `/home/locnguyent/rn-firebase-chat-rag/.env`
-- **Port**: 3001 (configured via MCP_HTTP_PORT in .env)
+- **Port**: 4001 (configured via MCP_HTTP_PORT in .env)
 - **Auto-restart**: Yes
 
 The service reads all configuration from the `.env` file, making it easy to update settings without modifying the service file.
@@ -145,7 +145,7 @@ The Nginx config is located at: `/etc/nginx/sites-available/rn-firebase-chat-mcp
 Key configurations:
 - **Domain**: rn-firebase-chat-mcp.rnbase.online
 - **Port**: 80 (HTTP), 443 (HTTPS - after SSL setup)
-- **Proxy**: http://127.0.0.1:3001
+- **Proxy**: http://127.0.0.1:4001
 
 ## 🔒 Enable HTTPS (Recommended)
 
