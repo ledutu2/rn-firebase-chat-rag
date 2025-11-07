@@ -9,6 +9,8 @@
     "dev": "npx tsx watch src/index.ts",
     "mcp": "MCP_SERVER=true npx tsx src/mcp/server.ts",
     "mcp:prod": "MCP_SERVER=true node dist/mcp/server.js",
+    "mcp:http": "npx tsx src/mcp/http-server.ts",
+    "mcp:http:prod": "node dist/mcp/http-server.js",
     "build": "tsc",
     "clean": "rm -rf dist"
   },

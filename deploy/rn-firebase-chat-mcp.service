@@ -1,0 +1,37 @@
+[Unit]
+Description=React Native Firebase Chat MCP Server
+Documentation=https://github.com/your-repo/rn-firebase-chat-rag
+After=network.target
+
+[Service]
+Type=simple
+User=locnguyent
+Group=locnguyent
+WorkingDirectory=/home/locnguyent/rn-firebase-chat-rag
+EnvironmentFile=/home/locnguyent/rn-firebase-chat-rag/.env
+
+# Start command
+ExecStart=/usr/bin/node /home/locnguyent/rn-firebase-chat-rag/dist/mcp/http-server.js
+
+# Restart policy
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=rn-firebase-chat-mcp
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/locnguyent/rn-firebase-chat-rag/data
+ReadWritePaths=/home/locnguyent/rn-firebase-chat-rag/logs
+
+[Install]
+WantedBy=multi-user.target
+
