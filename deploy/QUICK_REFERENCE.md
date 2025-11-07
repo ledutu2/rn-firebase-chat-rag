@@ -94,14 +94,21 @@ sudo systemctl status nginx
 ## 🔒 Enable HTTPS
 
 ```bash
-# Install certbot (one time)
-sudo apt install certbot python3-certbot-nginx
+# Option 1: Using setup script (easiest)
+sudo bash /home/locnguyent/rn-firebase-chat-rag/deploy/enable-https.sh
 
-# Get certificate
+# Option 2: Manual setup
+sudo apt install certbot python3-certbot-nginx
 sudo certbot --nginx -d rn-firebase-chat-mcp.rnbase.online
 
 # Test HTTPS
 curl https://rn-firebase-chat-mcp.rnbase.online/health
+
+# Check certificate
+sudo certbot certificates
+
+# Test auto-renewal
+sudo certbot renew --dry-run
 ```
 
 ## 🔄 Update Deployment

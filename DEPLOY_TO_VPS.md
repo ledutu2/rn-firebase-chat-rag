@@ -134,6 +134,26 @@ sudo systemctl restart rn-firebase-chat-mcp
 
 ### Enable HTTPS (Recommended)
 
+#### Option 1: Using the Setup Script (Easiest)
+
+```bash
+# SSH into VPS
+ssh locnguyent@10.30.10.35
+
+# Run the HTTPS setup script
+sudo bash /home/locnguyent/rn-firebase-chat-rag/deploy/enable-https.sh
+```
+
+The script will:
+- ✅ Install Certbot if not already installed
+- ✅ Obtain SSL certificate from Let's Encrypt
+- ✅ Configure Nginx for HTTPS automatically
+- ✅ Set up HTTP to HTTPS redirect
+- ✅ Test the HTTPS connection
+- ✅ Configure auto-renewal
+
+#### Option 2: Manual Setup
+
 ```bash
 # Install certbot
 sudo apt install certbot python3-certbot-nginx
@@ -141,13 +161,39 @@ sudo apt install certbot python3-certbot-nginx
 # Get SSL certificate
 sudo certbot --nginx -d rn-firebase-chat-mcp.rnbase.online
 
-# Follow the prompts and choose to redirect HTTP to HTTPS
+# Follow the prompts:
+# 1. Enter your email
+# 2. Agree to terms of service (Y)
+# 3. Choose option 2: Redirect HTTP to HTTPS (recommended)
+```
+
+#### Verify HTTPS
+
+```bash
+# Test HTTPS connection
+curl https://rn-firebase-chat-mcp.rnbase.online/health
+
+# Expected response:
+# {"status":"ok","service":"rn-firebase-chat-mcp","version":"1.0.0",...}
+```
+
+#### Certificate Management
+
+```bash
+# Check certificate status
+sudo certbot certificates
+
+# Test auto-renewal
+sudo certbot renew --dry-run
+
+# Manual renewal (if needed)
+sudo certbot renew
 ```
 
 Certbot will automatically:
-- Obtain SSL certificate from Let's Encrypt
+- Obtain SSL certificate (free from Let's Encrypt)
 - Configure Nginx for HTTPS
-- Set up auto-renewal
+- Set up auto-renewal (certificates renew every 90 days)
 
 ### Verify HTTPS
 

@@ -355,6 +355,10 @@ ls -la /home/locnguyent/rn-firebase-chat-rag/data/lancedb
 
 4. **Enable HTTPS**
    ```bash
+   # Easy way - using setup script
+   sudo bash /home/locnguyent/rn-firebase-chat-rag/deploy/enable-https.sh
+   
+   # Or manual way
    sudo certbot --nginx -d rn-firebase-chat-mcp.rnbase.online
    ```
 
