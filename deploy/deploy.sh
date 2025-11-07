@@ -41,13 +41,13 @@ fi
 
 # Install dependencies
 echo -e "${YELLOW}📦 Installing dependencies...${NC}"
-npm install --production=false
+yarn install --production=false
 
 echo -e "${GREEN}✓ Dependencies installed${NC}"
 
 # Build the project
 echo -e "${YELLOW}🔨 Building project...${NC}"
-npm run build
+yarn build
 
 echo -e "${GREEN}✓ Project built successfully${NC}"
 
